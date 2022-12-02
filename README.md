@@ -2,6 +2,8 @@
 
 D3.jsで描画したグラフをAWS lambda上で描画し、png形式でS3にアップロードするための例
 
+see: [AWS lambdaを使ってD3.jsで描画したグラフをpng出力する](https://zenn.dev/paulxll/articles/3931f248d4dd11)
+
 ## Requirement
 
 * AWS CLI
