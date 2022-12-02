@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import * as fs from "fs";
+import { writeFileSync, createReadStream } from "node:fs";
 import { JSDOM } from "jsdom";
 import winston from "winston";
 import {
@@ -162,7 +162,7 @@ export class DrawDonutsChart {
     }
     // 結果をsvgファイルに出力する.
     const outSvgFileName = `${this.outDir}/donuts.svg`;
-    fs.writeFileSync(outSvgFileName, document.body.innerHTML);
+    writeFileSync(outSvgFileName, document.body.innerHTML);
     this.logger.info("save svg chart was finished.");
     // 結果をpngに変換する
     await saveChartAsPng(
@@ -176,7 +176,7 @@ export class DrawDonutsChart {
     const uploadParams: PutObjectCommandInput = {
       Bucket: this.item.Bucket,
       Key: this.item.Key.replace(".json", ".png"),
-      Body: fs.createReadStream(`${this.outDir}/donuts.png`),
+      Body: createReadStream(`${this.outDir}/donuts.png`),
     };
     await WriteFileToS3(uploadParams);
     this.logger.info("Upload Chart to S3 finish!");

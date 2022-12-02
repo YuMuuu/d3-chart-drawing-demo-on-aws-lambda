@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import { writeFileSync } from "node:fs";
 import { DOMParser } from "@xmldom/xmldom";
 import * as canvas from "canvas";
 import fetch from "node-fetch";
@@ -25,5 +25,5 @@ export const saveChartAsPng = async (
   const v = Canvg.fromString(ctx, svgData, preset);
   await v.render();
   const png = canvasElement.toBuffer();
-  fs.writeFileSync(`${outDir}/donuts.png`, png);
+  writeFileSync(`${outDir}/donuts.png`, png);
 };
