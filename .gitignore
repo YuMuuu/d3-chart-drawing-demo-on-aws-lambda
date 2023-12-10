@@ -39,3 +39,7 @@ yarn-error.log*
 
 # sam
 template.yaml
+
+
+# dist
+/lambda_src/out/

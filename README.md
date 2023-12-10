@@ -9,6 +9,15 @@ see: [AWS lambdaを使ってD3.jsで描画したグラフをpng出力する](htt
 * AWS CLI
 * Docker
 * terraform
+* pkg-config cairo pango libpng jpeg giflib librsvg pixman
+
+
+## local development (m1 mac)
+
+1. `brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman nodenv`
+2. `cd lambda_src`
+3. `nodenv install 16.0.0 && nodenv local 16.0.0`
+4. `npm_config_target_arch=x64 yarn install`
 
 ## How it works
 
