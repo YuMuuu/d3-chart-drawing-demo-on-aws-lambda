@@ -1,3 +1,11 @@
+export class InputDatas {
+  readonly inputDatas: InputData[];
+
+  constructor(inputDatas: InputData[]) {
+    this.inputDatas = inputDatas;
+  }
+}
+
 export class InputData {
   readonly label: string;
   readonly color: string;

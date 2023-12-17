@@ -1,29 +1,55 @@
-import { writeFileSync } from "node:fs";
-import { DOMParser } from "@xmldom/xmldom";
-import * as canvas from "canvas";
-import fetch from "node-fetch";
-import { Canvg, presets } from "canvg";
+import { existsSync } from "node:fs";
+import { writeFile, readFile } from "node:fs/promises";
+import { Resvg } from "@resvg/resvg-js";
 
-export const saveChartAsPng = async (
-  svgElement: HTMLElement,
-  width: number,
-  height: number,
-  outDir: string
-) => {
-  const preset = presets.node({
-    DOMParser,
-    canvas,
-    fetch,
-  });
-  const canvasElement = new canvas.Canvas(width, height);
-  // 日本語化するための設定
-  canvas.registerFont("/var/task/resources/fonts/NotoSansJP-Regular.ttf", {
-    family: "Noto Sans JP",
-  });
-  const ctx = canvasElement.getContext("2d");
-  const svgData = svgElement.innerHTML;
-  const v = Canvg.fromString(ctx, svgData, preset);
-  await v.render();
-  const png = canvasElement.toBuffer();
-  writeFileSync(`${outDir}/donuts.png`, png);
-};
+export interface RenderOptions {
+  fontSrcPath: string;
+  fontFamily: string;
+  backgroundColor: string;
+  inputDir: string;
+  outputDir: string;
+}
+
+export class DefaultRenderOptions implements RenderOptions {
+  fontSrcPath = "/var/task/resources/fonts/NotoSansJP-Regular.ttf";
+  fontFamily = "Noto Sans JP";
+  backgroundColor = "rgba(255, 255, 255, .9)";
+  inputDir = "/tmp";
+  outputDir = "/tmp";
+}
+
+export class RenderChart {
+  options: RenderOptions = new DefaultRenderOptions();
+
+  private async readSvg(fileName: string) {
+    if (!existsSync(`${this.options.inputDir}/${fileName}.svg`)) {
+      throw new Error(
+        `指定されたファイルパス: ${this.options.inputDir}/${fileName}.svg にファイルが存在しませんでした.`
+      );
+    } else {
+      return await readFile(`${this.options.inputDir}/${fileName}.svg`);
+    }
+  }
+
+  async saveAsPngFile(fileName: string): Promise<void> {
+    if (fileName.includes(".")) {
+      throw new Error(
+        `fileName: ${fileName} contains '.' . fileName should not contain '.'.`
+      );
+    } else {
+      const svg = await this.readSvg(fileName);
+      const opts = {
+        background: this.options.backgroundColor,
+        font: {
+          fontFiles: [this.options.fontSrcPath],
+          loadSystemFonts: false,
+          defaultFontFamily: this.options.fontFamily,
+        },
+      };
+      const resvg = new Resvg(svg, opts);
+      const pngData = resvg.render();
+      const pngBuffer = pngData.asPng();
+      await writeFile(`${this.options.outputDir}/${fileName}.png`, pngBuffer);
+    }
+  }
+}
