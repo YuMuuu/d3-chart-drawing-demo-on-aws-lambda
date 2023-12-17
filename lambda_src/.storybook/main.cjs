@@ -1,4 +1,5 @@
 const path = require("path");
+const ResolveTypeScriptPlugin = require("resolve-typescript-plugin").default;
 
 // 本当はctsで書きたいが、virtualModulesPluginのインスタンスの取得がうまくできないのでissueに書いてあるcjsファイルをそのまま利用している
 
@@ -15,7 +16,7 @@ const replaceFileExtension = (filePath, newExtension) => {
   });
 };
 module.exports = {
-  stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(js|ts)"],
+  stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.ts"],
   addons: ["@storybook/addon-links", "@storybook/addon-essentials"],
   framework: "@storybook/html-webpack5",
   core: {
@@ -47,6 +48,16 @@ module.exports = {
       }
       return entry;
     });
+
+    config.resolve = {
+      ...config.resolve,
+      plugins: [
+        //typescript+esm 対応
+        //storybook が webpack v5.74.0以上に対応したら extensionAlias という機能が入るのでこの設定はいらなくなる
+        new ResolveTypeScriptPlugin(),
+      ],
+    };
+
     return config;
   },
 };
