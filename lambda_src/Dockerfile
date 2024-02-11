@@ -1,4 +1,9 @@
-FROM public.ecr.aws/lambda/nodejs:16
+ARG FUNCTION_DIR="/var/task"
+
+FROM public.ecr.aws/lambda/nodejs:16 as build-image
+
+ARG FUNCTION_DIR
+WORKDIR ${FUNCTION_DIR}
 
 # ALAS2-2022-1877 対策
 RUN yum -y update expat
@@ -16,9 +21,21 @@ COPY resources/fonts resources/fonts
 ENV LD_PRELOAD=/var/task/node_modules/canvas/build/Release/libz.so.1
 # see: https://github.com/Automattic/node-canvas/issues/1939#issuecomment-1003727738
 ENV LD_LIBRARY_PATH=/var/task/node_modules/canvas/build/Release:/var/lang/lib:/lib64:/usr/lib64:/var/runtime:/var/runtime/lib:/var/task:/var/task/lib:/opt/lib
+
 # yarn だけ先にinstallする
 RUN npm install -g yarn 
-
 RUN yarn install --frozen-lockfile && yarn build
+
+FROM public.ecr.aws/lambda/nodejs:16
+
+ENV HOME="/tmp"
+ARG FUNCTION_DIR
+WORKDIR ${FUNCTION_DIR}
+
+ENV LD_PRELOAD=/var/task/node_modules/canvas/build/Release/libz.so.1
+ENV LD_LIBRARY_PATH=/var/task/node_modules/canvas/build/Release:/var/lang/lib:/lib64:/usr/lib64:/var/runtime:/var/runtime/lib:/var/task:/var/task/lib:/opt/lib
+
+
+COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
 
 CMD [ "out/handler.main" ]
