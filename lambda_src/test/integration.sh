@@ -10,7 +10,6 @@ export AWS_SECRET_ACCESS_KEY=dummy
 
 docker-compose build
 docker-compose up -d 
-pwd
 sh ./setup/s3.sh
 
 
