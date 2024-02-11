@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { InputData, InputDatas } from "./types/InputDatas";
-import { ChartingConfiguration } from "./types/charingConfiguration";
+import { InputData, InputDatas } from "./types/InputDatas.js";
+import { ChartingConfiguration } from "./types/charingConfiguration.js";
 
 export function draw(document: Document, inputs: InputDatas): Document {
   const width = 600;
