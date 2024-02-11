@@ -24,7 +24,7 @@ export class DrawDonutsService {
   }
 
   outDir = process.env["OUT_DIR_LOCAL"] || "/tmp";
-  fileName = `${this.outDir}/donuts.svg`;
+  fileName = "donuts";
 
   argParser = new ArgParser();
 

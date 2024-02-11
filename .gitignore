@@ -43,3 +43,4 @@ template.yaml
 
 # dist
 /lambda_src/out/
+/lambda_src/sample.png
