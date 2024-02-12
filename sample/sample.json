@@ -1,8 +1,0 @@
-[
-  { "label": "20代", "proportion": "0.15", "color": "#d53e4f" },
-  { "label": "30代", "proportion": "0.23", "color": "#fc8d59" },
-  { "label": "40代", "proportion": "0.21", "color": "#fee08b" },
-  { "label": "50代", "proportion": "0.18", "color": "#ffffbf" },
-  { "label": "60代", "proportion": "0.15", "color": "#e6f598" },
-  { "label": "70代以上", "proportion": "0.08", "color": "#99d594" }
-]
